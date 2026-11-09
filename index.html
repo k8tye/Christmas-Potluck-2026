@@ -95,7 +95,8 @@
 
   .rule { height: 2px; margin: 18px 0; background: var(--red); opacity: .8; }
 
-  .tagline { font-style: italic; font-weight: 700; color: var(--red); font-size: clamp(.92rem, 4.2vw, 1.1rem); margin: 0; }
+  .tagline { font-style: italic; font-weight: 700; color: var(--red); font-size: min(1.1rem, calc((100vw - 84px) / 23)); margin: 0; white-space: nowrap; }
+  @media (min-width: 420px) { .tagline { font-size: min(1.1rem, calc((100vw - 104px) / 23)); } }
   .bring { font-style: italic; font-weight: 700; color: var(--green-deep); font-size: .9rem; margin: 14px 0 0; text-wrap: balance; }
   .nb { white-space: nowrap; }
   .bring .family { display: block; margin-top: 12px; font-size: 1.12rem; color: var(--red); }
