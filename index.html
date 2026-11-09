@@ -92,7 +92,8 @@
   .rule svg { width: 22px; height: 22px; flex: none; }
 
   .tagline { font-style: italic; font-weight: 700; color: var(--red); font-size: clamp(.92rem, 4.2vw, 1.1rem); margin: 0; }
-  .bring { font-style: italic; font-weight: 700; color: var(--green-deep); font-size: .9rem; margin: 14px 0 0; }
+  .bring { font-style: italic; font-weight: 700; color: var(--green-deep); font-size: .9rem; margin: 14px 0 0; text-wrap: balance; }
+  .nb { white-space: nowrap; }
 
   .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; font-family: var(--sans); }
   .btn-ghost {
@@ -275,7 +276,7 @@
       <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
       <p class="tagline">Dinner &nbsp;•&nbsp; Karaoke &nbsp;•&nbsp; Special Christmas Guest</p>
       <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
-      <p class="bring">Share a favorite dish and your beverage of choice.<br>Families welcome!</p>
+      <p class="bring"><span class="nb">Come hungry:</span> share a dish and your favorite&nbsp;drink!<br>Bring the whole family!</p>
 
       <div class="actions">
         <a class="btn-ghost" id="calBtn" href="invite.ics">
@@ -452,7 +453,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     gcal.searchParams.set("text", "Ugly Sweater Christmas Potluck");
     gcal.searchParams.set("dates", "20261205T230000Z/20261206T030000Z");
     gcal.searchParams.set("location", "40008 Maddie Drive, Prairieville, LA 70769");
-    gcal.searchParams.set("details", "DMAE / VIS Professors Ugly Sweater Christmas Potluck. Dinner, karaoke & a special Christmas guest! Share a favorite dish and your beverage of choice. Families welcome!");
+    gcal.searchParams.set("details", "DMAE / VIS Professors Ugly Sweater Christmas Potluck. Dinner, karaoke & a special Christmas guest! Come hungry: share a dish and your favorite drink! Bring the whole family!");
     $("#calBtn").href = gcal.toString();
     $("#calBtn").target = "_blank";
     $("#calBtn").rel = "noopener";
