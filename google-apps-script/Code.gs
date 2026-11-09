@@ -31,6 +31,19 @@ function setup() {
   MailApp.getRemainingDailyQuota(); // triggers the email permission prompt
 }
 
+/**
+ * Run this from the editor (select "testEmail" > Run) to check notifications.
+ * It sends one test email and shows in the Execution log exactly where it went,
+ * or the exact error if Google blocked it.
+ */
+function testEmail() {
+  const to = NOTIFY_EMAIL || Session.getEffectiveUser().getEmail();
+  console.log('Sending a test email to: ' + to);
+  MailApp.sendEmail(to, '🎄 Potluck RSVP test email', 'Notifications are working! RSVP emails will arrive at this address.\n\nSheet: ' +
+    SpreadsheetApp.getActiveSpreadsheet().getUrl());
+  console.log('Sent. Emails left today: ' + MailApp.getRemainingDailyQuota());
+}
+
 /** Receives an RSVP sent as a POST (kept for compatibility). */
 function doPost(e) {
   try {
