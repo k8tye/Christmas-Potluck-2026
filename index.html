@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ugly Sweater Potluck RSVP</title>
+<meta name="description" content="RSVP for the DMAE / VIS Professors Ugly Sweater Christmas Potluck — Saturday, December 5, 2026 at 5:00 PM.">
+<meta name="theme-color" content="#a5121c">
+<meta name="color-scheme" content="light">
+
+<!-- Link preview when the URL is texted or emailed -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ugly Sweater Christmas Potluck — RSVP">
+<meta property="og:description" content="Sat, Dec 5 · 5:00 PM · Prairieville. Tap to RSVP and tell us what you're bringing!">
+<meta property="og:image" content="https://k8tye.github.io/Christmas-Potluck-2026/assets/preview.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --red: #a5121c;
+    --red-bright: #c8202a;
+    --red-deep: #7a0b12;
+    --green: #1f5130;
+    --green-deep: #15381f;
+    --gold: #d6a347;
+    --gold-soft: #f0d49a;
+    --paper: #fdf4e3;
+    --paper-2: #f8e9cc;
+    --ink: #1d2f20;
+    --muted: #5f5a4c;
+    --line: #e4cfa6;
+    --radius: 14px;
+    --serif: "Libre Baskerville", Georgia, "Times New Roman", serif;
+    --script: "Dancing Script", "Brush Script MT", cursive;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--serif);
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,.08) 0 2px, transparent 3px) 0 0 / 46px 46px,
+      radial-gradient(circle at 70% 60%, rgba(255,255,255,.06) 0 1.5px, transparent 2.5px) 0 0 / 34px 34px,
+      linear-gradient(160deg, #b5141f 0%, #8d0d16 55%, #6e0910 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: max(12px, env(safe-area-inset-top)) 12px max(24px, env(safe-area-inset-bottom));
+    line-height: 1.5;
+  }
+
+  .card {
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--paper);
+    background-image: radial-gradient(ellipse at 50% 0%, #fffaf0 0%, var(--paper) 55%, var(--paper-2) 100%);
+    border-radius: 18px;
+    box-shadow: 0 0 0 3px var(--gold), 0 0 0 7px var(--paper), 0 0 0 9px var(--gold), 0 18px 50px rgba(0,0,0,.45);
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .hero { display: block; width: 100%; height: auto; }
+
+  .inner { padding: 4px 20px 28px; }
+  @media (min-width: 420px) { .inner { padding: 4px 30px 34px; } }
+
+  /* ---------- Event details ---------- */
+  .details { text-align: center; margin-top: -6px; }
+  .date { font-weight: 700; color: var(--green-deep); font-size: clamp(1.15rem, 5vw, 1.45rem); margin: 0; }
+  .time { font-weight: 700; color: var(--red); font-size: clamp(1.5rem, 7vw, 1.9rem); margin: 0; line-height: 1.2; }
+  .addr { font-weight: 700; color: var(--green-deep); font-size: .95rem; margin: 4px 0 0; }
+  .addr a { color: inherit; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+
+  .rule { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: var(--red); }
+  .rule::before, .rule::after { content: ""; flex: 1; height: 2px; background: var(--red); opacity: .8; }
+  .rule svg { width: 22px; height: 22px; flex: none; }
+
+  .tagline { font-style: italic; font-weight: 700; color: var(--red); text-align: center; font-size: clamp(.95rem, 4.2vw, 1.15rem); margin: 0; }
+  .bring { font-style: italic; font-weight: 700; color: var(--green-deep); text-align: center; font-size: .92rem; margin: 14px 0 0; }
+
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 46px; padding: 10px 12px;
+    border: 2px solid var(--green); border-radius: 999px;
+    color: var(--green-deep); background: #fffaf0;
+    font: 700 .85rem/1.2 var(--serif); text-decoration: none;
+  }
+  .btn-ghost svg { width: 18px; height: 18px; flex: none; }
+  .btn-ghost:active { background: #f3ead4; }
+
+  .deadline {
+    margin: 22px auto 0; text-align: center;
+    background: var(--red); color: #fff;
+    font-family: var(--script); font-size: clamp(1.45rem, 6.5vw, 1.8rem);
+    padding: 8px 18px 10px; line-height: 1.1;
+    clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%);
+    box-shadow: inset 0 0 0 2px var(--gold);
+  }
+  .deadline small { display: block; font-family: var(--serif); font-size: .78rem; font-weight: 700; letter-spacing: .02em; color: var(--gold-soft); margin-top: 2px; }
+
+  /* ---------- Form ---------- */
+  h2 {
+    font-family: var(--script); color: var(--red); font-weight: 700;
+    font-size: clamp(2rem, 9vw, 2.5rem); text-align: center; margin: 26px 0 4px; line-height: 1.1;
+  }
+  .sub { text-align: center; color: var(--muted); font-size: .88rem; margin: 0 0 8px; }
+
+  form { margin-top: 10px; }
+  .field { margin-top: 20px; }
+  .field > label, .field > .label {
+    display: block; font-weight: 700; color: var(--green-deep); font-size: .98rem; margin-bottom: 8px;
+  }
+  .opt { font-weight: 400; font-style: italic; color: var(--muted); font-size: .82rem; }
+  .req { color: var(--red); }
+  .hint { color: var(--muted); font-size: .8rem; margin: 6px 0 0; font-style: italic; }
+
+  input[type=text], input[type=email], input[type=tel], textarea {
+    width: 100%; font: 16px/1.4 var(--serif); /* 16px prevents iOS zoom */
+    color: var(--ink); background: #fffdf8;
+    border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  textarea { min-height: 84px; resize: vertical; }
+  input:focus, textarea:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(31,81,48,.18); }
+  ::placeholder { color: #a39a85; font-style: italic; }
+
+  /* chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { position: relative; }
+  .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .chip > span {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px;
+    padding: 9px 15px; border-radius: 999px;
+    border: 2px solid var(--line); background: #fffdf8; color: var(--ink);
+    font-size: .9rem; user-select: none; transition: all .15s;
+  }
+  .chip input:checked + span { background: var(--green); border-color: var(--green); color: #fff; font-weight: 700; }
+  .chip input:focus-visible + span { box-shadow: 0 0 0 3px rgba(214,163,71,.6); }
+
+  .attend { display: grid; gap: 10px; }
+  .attend .chip > span { width: 100%; justify-content: flex-start; min-height: 54px; font-size: 1rem; padding: 12px 18px; border-radius: 14px; }
+  .attend .chip input:checked + span { background: var(--red); border-color: var(--red); }
+  .attend .emoji { font-size: 1.3rem; }
+
+  /* steppers */
+  .steppers { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  .stepper-box { background: #fffdf8; border: 2px solid var(--line); border-radius: 14px; padding: 10px 6px 12px; text-align: center; }
+  .stepper-box .label { font-size: .82rem; font-weight: 700; color: var(--green-deep); margin-bottom: 6px; display: block; }
+  .stepper { display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .stepper button {
+    width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--green);
+    background: #fff; color: var(--green); font: 700 1.4rem/1 var(--serif); cursor: pointer;
+    display: grid; place-items: center; padding: 0;
+  }
+  .stepper button:active { background: var(--green); color: #fff; }
+  .stepper output { min-width: 2ch; font-size: 1.6rem; font-weight: 700; color: var(--red); }
+
+  .dish-row { display: grid; gap: 10px; }
+
+  .submit {
+    width: 100%; margin-top: 28px; min-height: 58px;
+    border: 0; border-radius: 999px; cursor: pointer;
+    background: linear-gradient(180deg, var(--red-bright), var(--red));
+    color: #fff; font: 700 1.15rem/1 var(--serif); letter-spacing: .02em;
+    box-shadow: 0 0 0 3px var(--gold), 0 8px 18px rgba(122,11,18,.35);
+  }
+  .submit:active { transform: translateY(1px); }
+  .submit[disabled] { opacity: .7; cursor: wait; }
+
+  .error { color: var(--red); font-weight: 700; font-size: .88rem; margin: 12px 0 0; text-align: center; }
+  .field.invalid input, .field.invalid .attend .chip > span { border-color: var(--red); }
+
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  [hidden] { display: none !important; }
+
+  /* ---------- Thank-you ---------- */
+  .thanks { text-align: center; padding-top: 6px; }
+  .thanks h2 { margin-top: 18px; }
+  .summary { text-align: left; background: #fffdf8; border: 2px dashed var(--gold); border-radius: var(--radius); padding: 14px 16px; margin: 16px 0; font-size: .9rem; }
+  .summary dt { font-weight: 700; color: var(--green-deep); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; margin-top: 8px; }
+  .summary dt:first-child { margin-top: 0; }
+  .summary dd { margin: 2px 0 0; }
+  .linkish { background: none; border: 0; color: var(--green); font: 700 .9rem var(--serif); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 10px; }
+  .preview-note { font-size: .78rem; color: var(--muted); background: #fff3c4; border-radius: 8px; padding: 8px 10px; margin-top: 10px; }
+
+  /* ---------- Who's bringing what ---------- */
+  .potluck { margin-top: 30px; }
+  .stats { display: flex; justify-content: center; gap: 10px; margin: 10px 0 4px; flex-wrap: wrap; }
+  .stat { background: var(--green); color: #fff; border-radius: 12px; padding: 8px 14px; text-align: center; min-width: 100px; box-shadow: inset 0 0 0 2px rgba(255,255,255,.15); }
+  .stat b { display: block; font-size: 1.4rem; line-height: 1.1; }
+  .stat span { font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; }
+  .group { margin-top: 16px; }
+  .group h3 { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--red); margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+  .group h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .group h3 .count { background: var(--red); color: #fff; border-radius: 999px; padding: 1px 8px; font-size: .7rem; letter-spacing: 0; }
+  .group ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .group li { background: #fffdf8; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: .86rem; }
+  .empty { text-align: center; color: var(--muted); font-style: italic; font-size: .9rem; margin: 12px 0 0; }
+
+  footer { text-align: center; color: var(--gold-soft); font-size: .75rem; margin: 18px 0 0; font-style: italic; }
+</style>
+</head>
+<body>
+
+<main class="card">
+  <img class="hero" src="assets/header.jpg" width="1024" height="745"
+       alt="You're invited to the DMAE / VIS Professors Ugly Sweater Christmas Potluck">
+
+  <div class="inner">
+    <section class="details" aria-label="Party details">
+      <p class="date">Saturday, December 5, 2026</p>
+      <p class="time">5:00 PM</p>
+      <p class="addr"><a href="https://www.google.com/maps/search/?api=1&query=40008+Maddie+Drive%2C+Prairieville%2C+LA+70769" target="_blank" rel="noopener">40008 Maddie Drive, Prairieville, LA 70769</a></p>
+
+      <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
+      <p class="tagline">Dinner &nbsp;•&nbsp; Karaoke &nbsp;•&nbsp; Special Christmas Guest</p>
+      <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
+      <p class="bring">Bring a dish to share and your beverage of choice.<br>Bring the whole family!</p>
+
+      <div class="actions">
+        <a class="btn-ghost" id="calBtn" href="invite.ics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          Add to calendar
+        </a>
+        <a class="btn-ghost" href="https://www.google.com/maps/dir/?api=1&destination=40008+Maddie+Drive%2C+Prairieville%2C+LA+70769" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          Directions
+        </a>
+      </div>
+
+      <div class="deadline">Kindly RSVP<small>by Tuesday, December 1</small></div>
+    </section>
+
+    <!-- ================= RSVP FORM ================= -->
+    <section id="formView">
+      <h2>Will you be there?</h2>
+      <p class="sub">Takes about a minute. You can update your answers later.</p>
+
+      <form id="rsvp" novalidate>
+        <div class="field" id="f-name">
+          <label for="name">Your name <span class="req">*</span></label>
+          <input type="text" id="name" name="name" autocomplete="name" placeholder="e.g. Jamie Thibodeaux" maxlength="100" required>
+        </div>
+
+        <div class="field" id="f-attending">
+          <span class="label" id="attLabel">Can you make it? <span class="req">*</span></span>
+          <div class="attend" role="radiogroup" aria-labelledby="attLabel">
+            <label class="chip"><input type="radio" name="attending" value="Yes"><span><span class="emoji">🎄</span> Yes, count us in!</span></label>
+            <label class="chip"><input type="radio" name="attending" value="Maybe"><span><span class="emoji">🤔</span> Maybe, I'll confirm soon</span></label>
+            <label class="chip"><input type="radio" name="attending" value="No"><span><span class="emoji">💌</span> Sorry, can't make it</span></label>
+          </div>
+        </div>
+
+        <div id="comingFields" hidden>
+          <div class="field">
+            <span class="label">Who's coming?</span>
+            <div class="steppers">
+              <div class="stepper-box">
+                <span class="label" id="lblParty">Total in your party<br><span class="opt">(including you)</span></span>
+                <div class="stepper" data-min="1" data-max="20">
+                  <button type="button" data-step="-1" aria-label="Fewer people">−</button>
+                  <output id="party" aria-labelledby="lblParty">1</output>
+                  <button type="button" data-step="1" aria-label="More people">+</button>
+                </div>
+              </div>
+              <div class="stepper-box">
+                <span class="label" id="lblKids">How many are kids?<br><span class="opt">(under 12)</span></span>
+                <div class="stepper" data-min="0" data-max="19">
+                  <button type="button" data-step="-1" aria-label="Fewer kids">−</button>
+                  <output id="kids" aria-labelledby="lblKids">0</output>
+                  <button type="button" data-step="1" aria-label="More kids">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="label" id="dishTypeLabel">What kind of dish are you bringing?</span>
+            <div class="chips" role="group" aria-labelledby="dishTypeLabel" id="dishTypes">
+              <label class="chip"><input type="checkbox" name="dishType" value="Main"><span>🍗 Main</span></label>
+              <label class="chip"><input type="checkbox" name="dishType" value="Side"><span>🥔 Side</span></label>
+              <label class="chip"><input type="checkbox" name="dishType" value="Appetizer"><span>🧀 Appetizer</span></label>
+              <label class="chip"><input type="checkbox" name="dishType" value="Dessert"><span>🍰 Dessert</span></label>
+              <label class="chip"><input type="checkbox" name="dishType" value="Other"><span>🍞 Other</span></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="dishes">Dish(es) you're bringing</label>
+            <input type="text" id="dishes" name="dishes" maxlength="200" placeholder="e.g. Crawfish mac & cheese, pralines">
+            <p class="hint">Check "Who's bringing what" below to avoid doubles. Not sure yet? Come back and update.</p>
+          </div>
+
+          <div class="field">
+            <label for="drinks">Drinks you're bringing</label>
+            <input type="text" id="drinks" name="drinks" maxlength="200" placeholder="e.g. Red wine, sweet tea, sparkling cider">
+          </div>
+
+          <div class="field">
+            <span class="label" id="dietLabel">Any dietary needs in your group?</span>
+            <div class="chips" role="group" aria-labelledby="dietLabel" id="diet">
+              <label class="chip"><input type="checkbox" name="diet" value="None"><span>None</span></label>
+              <label class="chip"><input type="checkbox" name="diet" value="Vegetarian"><span>Vegetarian</span></label>
+              <label class="chip"><input type="checkbox" name="diet" value="Vegan"><span>Vegan</span></label>
+              <label class="chip"><input type="checkbox" name="diet" value="Gluten-free"><span>Gluten-free</span></label>
+              <label class="chip"><input type="checkbox" name="diet" value="Dairy-free"><span>Dairy-free</span></label>
+              <label class="chip"><input type="checkbox" name="diet" value="Nut allergy"><span>Nut allergy</span></label>
+              <label class="chip"><input type="checkbox" name="diet" value="Shellfish allergy"><span>Shellfish allergy</span></label>
+              <label class="chip"><input type="checkbox" name="diet" value="Other"><span>Other</span></label>
+            </div>
+            <input type="text" id="dietNotes" name="dietNotes" maxlength="300" placeholder="Anything else we should know? (e.g. my son is allergic to eggs)" style="margin-top:10px">
+          </div>
+
+          <div class="field">
+            <label for="song">Karaoke song you might sing 🎤 <span class="opt">(optional, just for fun)</span></label>
+            <input type="text" id="song" name="song" maxlength="120" placeholder="e.g. All I Want for Christmas Is You">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="contact">Phone or email <span class="opt">(optional, in case we need to reach you)</span></label>
+          <input type="text" id="contact" name="contact" autocomplete="email" inputmode="email" maxlength="120" placeholder="(225) 555-0123 or you@email.com">
+        </div>
+
+        <div class="field">
+          <label for="note">Note for the host <span class="opt">(optional)</span></label>
+          <textarea id="note" name="note" maxlength="500" placeholder="Questions, well-wishes, anything!"></textarea>
+        </div>
+
+        <!-- spam trap: real people never see this -->
+        <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+        <button class="submit" type="submit" id="submitBtn">Send my RSVP 🎄</button>
+        <p class="error" id="formError" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <!-- ================= THANK YOU ================= -->
+    <section id="thanksView" class="thanks" hidden aria-live="polite">
+      <h2 id="thanksTitle">Thank you!</h2>
+      <p id="thanksMsg"></p>
+      <dl class="summary" id="summary"></dl>
+      <p id="previewNote" class="preview-note" hidden>Preview mode: the RSVP form isn't connected to the Google Sheet yet, so this wasn't saved.</p>
+      <button class="linkish" type="button" id="editBtn">Change my RSVP</button>
+    </section>
+
+    <!-- ================= WHO'S BRINGING WHAT ================= -->
+    <section class="potluck" aria-labelledby="potluckTitle">
+      <h2 id="potluckTitle">Who's Bringing What</h2>
+      <div class="stats" id="stats" hidden>
+        <div class="stat"><b id="statGuests">0</b><span>Guests</span></div>
+        <div class="stat"><b id="statDishes">0</b><span>Dishes</span></div>
+      </div>
+      <div id="potluckList"><p class="empty">Loading the menu…</p></div>
+    </section>
+  </div>
+</main>
+
+<footer>See you there! Ugly sweaters strongly encouraged. 🎅</footer>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7"/>
+    <path d="M9.5 3.5L12 6l2.5-2.5M9.5 20.5L12 18l2.5 2.5M4 10.4l3.4-.9-.9-3.4M20 13.6l-3.4.9.9 3.4M4 13.6l3.4.9-.9 3.4M20 10.4l-3.4-.9.9-3.4"/>
+  </symbol>
+</svg>
+
+<script>
+/* ================================================================
+   SETUP: paste your Google Apps Script "Web app" URL between the
+   quotes below (see README.md, step 2). Leave it blank to preview.
+   ================================================================ */
+const RSVP_ENDPOINT = "";
+
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const form = $("#rsvp");
+  const STORE_KEY = "potluck2026-rsvp";
+
+  /* ---- Apple devices: .ics file; everyone else: Google Calendar ---- */
+  const isApple = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+  if (!isApple) {
+    const gcal = new URL("https://calendar.google.com/calendar/render");
+    gcal.searchParams.set("action", "TEMPLATE");
+    gcal.searchParams.set("text", "Ugly Sweater Christmas Potluck");
+    gcal.searchParams.set("dates", "20261205T230000Z/20261206T030000Z");
+    gcal.searchParams.set("location", "40008 Maddie Drive, Prairieville, LA 70769");
+    gcal.searchParams.set("details", "DMAE / VIS Professors Ugly Sweater Christmas Potluck. Dinner, karaoke & a special Christmas guest! Bring a dish to share and your beverage of choice. Bring the whole family!");
+    $("#calBtn").href = gcal.toString();
+    $("#calBtn").target = "_blank";
+    $("#calBtn").rel = "noopener";
+  }
+
+  /* ---- Show/hide fields for people who are coming ---- */
+  const coming = $("#comingFields");
+  function syncAttending() {
+    const v = (form.attending.value || "");
+    coming.hidden = !(v === "Yes" || v === "Maybe");
+  }
+  $$('input[name="attending"]').forEach(r => r.addEventListener("change", () => {
+    syncAttending();
+    $("#f-attending").classList.remove("invalid");
+  }));
+
+  /* ---- Steppers ---- */
+  $$(".stepper").forEach(st => {
+    const out = $("output", st), min = +st.dataset.min, max = +st.dataset.max;
+    $$("button", st).forEach(b => b.addEventListener("click", () => {
+      let v = +out.value + +b.dataset.step;
+      v = Math.max(min, Math.min(max, v));
+      out.value = v;
+      clampKids();
+    }));
+  });
+  function clampKids() {
+    const party = +$("#party").value, kids = $("#kids");
+    if (+kids.value > party - 1) kids.value = Math.max(0, party - 1);
+  }
+
+  /* ---- "None" diet chip is exclusive ---- */
+  $$('input[name="diet"]').forEach(cb => cb.addEventListener("change", () => {
+    if (!cb.checked) return;
+    if (cb.value === "None") $$('input[name="diet"]').forEach(o => { if (o !== cb) o.checked = false; });
+    else $('input[name="diet"][value="None"]').checked = false;
+  }));
+
+  $("#name").addEventListener("input", () => $("#f-name").classList.remove("invalid"));
+
+  /* ---- Collect / restore ---- */
+  function collect() {
+    const checked = n => $$(`input[name="${n}"]:checked`).map(i => i.value);
+    const attending = form.attending.value;
+    const isComing = attending === "Yes" || attending === "Maybe";
+    return {
+      name: form.name.value.trim(),
+      contact: form.contact.value.trim(),
+      attending,
+      party: isComing ? +$("#party").value : 0,
+      kids: isComing ? +$("#kids").value : 0,
+      dishType: isComing ? checked("dishType").join(", ") : "",
+      dishes: isComing ? form.dishes.value.trim() : "",
+      drinks: isComing ? form.drinks.value.trim() : "",
+      diet: isComing ? checked("diet").join(", ") : "",
+      dietNotes: isComing ? form.dietNotes.value.trim() : "",
+      song: isComing ? form.song.value.trim() : "",
+      note: form.note.value.trim(),
+      website: form.website.value
+    };
+  }
+  function restore(d) {
+    form.name.value = d.name || "";
+    form.contact.value = d.contact || "";
+    $$('input[name="attending"]').forEach(r => r.checked = r.value === d.attending);
+    $("#party").value = d.party || 1;
+    $("#kids").value = d.kids || 0;
+    const setChecks = (n, csv) => { const vals = (csv || "").split(", "); $$(`input[name="${n}"]`).forEach(c => c.checked = vals.includes(c.value)); };
+    setChecks("dishType", d.dishType);
+    setChecks("diet", d.diet);
+    form.dishes.value = d.dishes || "";
+    form.drinks.value = d.drinks || "";
+    form.dietNotes.value = d.dietNotes || "";
+    form.song.value = d.song || "";
+    form.note.value = d.note || "";
+    syncAttending();
+  }
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) {}
+  if (saved) restore(saved);
+
+  /* ---- Submit ---- */
+  const err = $("#formError"), btn = $("#submitBtn");
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    err.hidden = true;
+    const data = collect();
+    if (!data.name) {
+      $("#f-name").classList.add("invalid");
+      return showError("Please enter your name.", $("#name"));
+    }
+    if (!data.attending) {
+      $("#f-attending").classList.add("invalid");
+      return showError("Please let us know if you can make it.", $('input[name="attending"]'));
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+    let preview = false;
+    try {
+      if (RSVP_ENDPOINT) {
+        const res = await fetch(RSVP_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight
+          body: JSON.stringify(data)
+        });
+        const out = await res.json();
+        if (!out.ok) throw new Error(out.error || "Something went wrong");
+      } else {
+        preview = true;
+      }
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+      showThanks(data, preview);
+      loadPotluck();
+    } catch (e) {
+      showError("Hmm, that didn't go through. Please check your connection and try again.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Send my RSVP 🎄";
+    }
+  });
+
+  function showError(msg, focusEl) {
+    err.textContent = msg;
+    err.hidden = false;
+    if (focusEl) { focusEl.focus({ preventScroll: true }); focusEl.scrollIntoView({ behavior: "smooth", block: "center" }); }
+  }
+
+  function showThanks(d, preview) {
+    const first = d.name.split(/\s+/)[0];
+    const yes = d.attending === "Yes", maybe = d.attending === "Maybe";
+    $("#thanksTitle").textContent = yes ? `See you there, ${first}!` : maybe ? `Thanks, ${first}!` : `We'll miss you, ${first}!`;
+    $("#thanksMsg").textContent = yes
+      ? "Your RSVP is in. Dust off that ugly sweater! 🎄"
+      : maybe ? "Got it. Come back to this page and update your RSVP once you know."
+      : "Thanks for letting us know. Merry Christmas! ❤️";
+    const rows = [["Attending", d.attending]];
+    if (yes || maybe) {
+      rows.push(["Party size", d.party + (d.kids ? ` (${d.kids} kid${d.kids > 1 ? "s" : ""})` : "")]);
+      if (d.dishes || d.dishType) rows.push(["Bringing", [d.dishType, d.dishes].filter(Boolean).join(": ")]);
+      if (d.drinks) rows.push(["Drinks", d.drinks]);
+      if (d.diet || d.dietNotes) rows.push(["Dietary", [d.diet, d.dietNotes].filter(Boolean).join(" · ")]);
+      if (d.song) rows.push(["Karaoke", d.song]);
+    }
+    const dl = $("#summary");
+    dl.replaceChildren(...rows.flatMap(([k, v]) => {
+      const dt = document.createElement("dt"); dt.textContent = k;
+      const dd = document.createElement("dd"); dd.textContent = v;
+      return [dt, dd];
+    }));
+    $("#previewNote").hidden = !preview;
+    $("#formView").hidden = true;
+    $("#thanksView").hidden = false;
+    $("#thanksView").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  $("#editBtn").addEventListener("click", () => {
+    $("#thanksView").hidden = true;
+    $("#formView").hidden = false;
+    $("#formView").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  /* ---- Who's bringing what (dishes & drinks only, no names) ---- */
+  const GROUPS = [
+    ["Main", "🍗 Mains"], ["Side", "🥔 Sides"], ["Appetizer", "🧀 Appetizers"],
+    ["Dessert", "🍰 Desserts"], ["Other", "🍞 Other"], ["", "🍽️ Not sorted yet"]
+  ];
+  async function loadPotluck() {
+    const box = $("#potluckList");
+    if (!RSVP_ENDPOINT) {
+      box.innerHTML = '<p class="empty">The dish list will show up here once RSVPs start coming in.</p>';
+      return;
+    }
+    try {
+      const res = await fetch(RSVP_ENDPOINT + "?t=" + Date.now());
+      const d = await res.json();
+      if (!d.ok) throw 0;
+      $("#stats").hidden = false;
+      $("#statGuests").textContent = d.guests;
+      $("#statDishes").textContent = d.dishes.length;
+
+      const frag = document.createDocumentFragment();
+      const addGroup = (title, items) => {
+        if (!items.length) return;
+        const g = document.createElement("div"); g.className = "group";
+        const h = document.createElement("h3"); h.textContent = title + " ";
+        const c = document.createElement("span"); c.className = "count"; c.textContent = items.length; h.append(c);
+        const ul = document.createElement("ul");
+        items.forEach(t => { const li = document.createElement("li"); li.textContent = t; ul.append(li); });
+        g.append(h, ul); frag.append(g);
+      };
+      GROUPS.forEach(([key, title]) => {
+        addGroup(title, d.dishes.filter(x => (key ? x.type.split(", ")[0] === key : !x.type)).map(x => x.dish));
+      });
+      addGroup("🥤 Drinks", d.drinks);
+      if (!frag.childNodes.length) box.innerHTML = '<p class="empty">No dishes yet. Be the first to claim one!</p>';
+      else box.replaceChildren(frag);
+    } catch (e) {
+      box.innerHTML = '<p class="empty">Couldn\'t load the list right now. Try refreshing.</p>';
+    }
+  }
+  loadPotluck();
+})();
+</script>
+</body>
+</html>
