@@ -259,6 +259,10 @@
   .group h3 .count { background: var(--red); color: #fff; border-radius: 999px; padding: 1px 8px; font-size: .7rem; letter-spacing: 0; }
   .group ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
   .group li { background: #fffdf8; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: .88rem; }
+  .group li .who { color: var(--muted); font-size: .8rem; margin-left: 4px; }
+  .group li .who::before { content: "· "; }
+  .people li { font-weight: 600; }
+  .people li .plus { font-weight: 700; color: var(--red); font-size: .8rem; margin-left: 4px; }
   .empty { text-align: center; color: var(--muted); font-style: italic; font-size: .9rem; margin: 12px 0 0; }
 </style>
 </head>
@@ -396,6 +400,12 @@
         </a>
       </div>
       <button class="linkish" type="button" id="editBtn">Change my RSVP</button>
+    </section>
+
+    <!-- ================= WHO'S COMING ================= -->
+    <section class="potluck" id="comingSection" aria-labelledby="comingTitle" hidden>
+      <h2 id="comingTitle">Who's Coming</h2>
+      <div id="comingList"></div>
     </section>
 
     <!-- ================= WHO'S BRINGING WHAT ================= -->
@@ -690,7 +700,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     $("#formView").scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  /* ---- Who's bringing what (dishes & drinks only, no names) ---- */
+  /* ---- Who's coming + who's bringing what (names, dishes, drinks; never contact or dietary info) ---- */
   const GROUPS = [
     ["Main", "🍗 Mains"], ["Side", "🥔 Sides"], ["Appetizer", "🧀 Appetizers"],
     ["Dessert", "🍰 Desserts"], ["Other", "🍞 Other"]
@@ -708,11 +718,12 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
 
       // Each RSVP stores matching lists: type "Side, Dessert" + dish "Gumbo, Pralines"
       const items = [];
+      const firstName = n => String(n || "").trim().split(/\s+/)[0] || "";
       d.dishes.forEach(x => {
         const types = String(x.type || "").split(/\s*,\s*/);
         String(x.dish || "").split(/\s*,\s*/).filter(Boolean).forEach((name, i) => {
           const t = types[i] || types[0] || "Other";
-          items.push({ type: GROUPS.some(g => g[0] === t) ? t : "Other", name });
+          items.push({ type: GROUPS.some(g => g[0] === t) ? t : "Other", name, who: firstName(x.name) });
         });
       });
 
@@ -720,21 +731,43 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
       $("#statGuests").textContent = d.guests;
       $("#statDishes").textContent = items.length;
 
-      const frag = document.createDocumentFragment();
-      const addGroup = (title, list) => {
+      const makeGroup = (frag, title, list, count, extraClass) => {
         if (!list.length) return;
-        const g = document.createElement("div"); g.className = "group";
+        const g = document.createElement("div"); g.className = "group" + (extraClass ? " " + extraClass : "");
         const h = document.createElement("h3"); h.textContent = title + " ";
-        const c = document.createElement("span"); c.className = "count"; c.textContent = list.length; h.append(c);
+        const c = document.createElement("span"); c.className = "count"; c.textContent = count ?? list.length; h.append(c);
         const ul = document.createElement("ul");
-        list.forEach(t => { const li = document.createElement("li"); li.textContent = t; ul.append(li); });
+        list.forEach(it => {
+          const li = document.createElement("li");
+          li.textContent = it.text;
+          if (it.who) { const w = document.createElement("span"); w.className = "who"; w.textContent = it.who; li.append(w); }
+          if (it.plus) { const p = document.createElement("span"); p.className = "plus"; p.textContent = it.plus; li.append(p); }
+          ul.append(li);
+        });
         g.append(h, ul); frag.append(g);
       };
-      GROUPS.forEach(([key, title]) => addGroup(title, items.filter(x => x.type === key).map(x => x.name)));
-      const drinks = d.drinks.flatMap(x => String(x).split(/\s*,\s*/)).filter(Boolean).map(parseDrink);
-      addGroup("🍷 Alcoholic drinks", drinks.filter(x => x.type === "Alcoholic").map(x => x.name));
-      addGroup("🥤 Non-alcoholic drinks", drinks.filter(x => x.type === "Non-alcoholic").map(x => x.name));
-      addGroup("🥤 Drinks", drinks.filter(x => !x.type).map(x => x.name));
+
+      // Who's coming (only when the Google script sends names)
+      if (Array.isArray(d.people)) {
+        const cf = document.createDocumentFragment();
+        const person = x => ({ text: x.name, plus: x.party > 1 ? "+" + (x.party - 1) : "" });
+        const yes = d.people.filter(x => x.attending === "Yes"), maybe = d.people.filter(x => x.attending === "Maybe");
+        makeGroup(cf, "🎄 Coming", yes.map(person), yes.reduce((n, x) => n + (x.party || 1), 0), "people");
+        makeGroup(cf, "🤔 Maybe", maybe.map(person), maybe.length, "people");
+        $("#comingSection").hidden = !cf.childNodes.length;
+        $("#stats").hidden = true; // counts already show on the group headers
+        $("#comingList").replaceChildren(cf);
+      }
+
+      const frag = document.createDocumentFragment();
+      const addGroup = (title, list) => makeGroup(frag, title, list);
+      GROUPS.forEach(([key, title]) => addGroup(title, items.filter(x => x.type === key).map(x => ({ text: x.name, who: x.who }))));
+      const names = d.drinkNames || [];
+      const drinks = d.drinks.flatMap((x, i) => String(x).split(/\s*,\s*/).filter(Boolean).map(dr => ({ ...parseDrink(dr), who: firstName(names[i]) })));
+      const asItems = list => list.map(x => ({ text: x.name, who: x.who }));
+      addGroup("🍷 Alcoholic drinks", asItems(drinks.filter(x => x.type === "Alcoholic")));
+      addGroup("🥤 Non-alcoholic drinks", asItems(drinks.filter(x => x.type === "Non-alcoholic")));
+      addGroup("🥤 Drinks", asItems(drinks.filter(x => !x.type)));
       if (!frag.childNodes.length) box.innerHTML = '<p class="empty">No dishes yet. Be the first to claim one!</p>';
       else box.replaceChildren(frag);
     } catch (e) {

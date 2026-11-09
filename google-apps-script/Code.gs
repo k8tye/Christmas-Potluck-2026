@@ -95,7 +95,8 @@ function saveRsvp_(d) {
   return { ok: true, saved: true, updated: !!existing, emailed: emailed };
 }
 
-/** Saves an RSVP (?rsvp=...) or returns the public "Who's bringing what" list (dishes & drinks only). */
+/** Saves an RSVP (?rsvp=...) or returns the public guest list: names, party sizes, dishes and drinks.
+ *  Contact info, dietary needs and notes are never sent to the page. */
 function doGet(e) {
   // The RSVP page sends answers as ?rsvp={...}
   if (e && e.parameter && e.parameter.rsvp) {
@@ -107,7 +108,7 @@ function doGet(e) {
   }
   const sheet = getSheet_();
   const last = sheet.getLastRow();
-  const out = { ok: true, guests: 0, households: 0, dishes: [], drinks: [] };
+  const out = { ok: true, guests: 0, households: 0, people: [], dishes: [], drinks: [], drinkNames: [] };
   if (last < 2) return json_(out);
 
   const rows = sheet.getRange(2, 1, last - 1, HEADERS.length).getValues();
@@ -115,9 +116,11 @@ function doGet(e) {
     const attending = r[4], party = Number(r[5]) || 0;
     const type = String(r[7] || ''), dish = String(r[8] || '').replace(/^'/, ''), drink = String(r[9] || '').replace(/^'/, '');
     if (attending !== 'Yes' && attending !== 'Maybe') return;
+    const name = String(r[2] || '').replace(/^'/, '').trim();
     if (attending === 'Yes') { out.guests += party; out.households++; }
-    if (dish || type) out.dishes.push({ type: type, dish: dish || ('A ' + type.split(', ')[0].toLowerCase() + ' (TBD)') });
-    if (drink) out.drinks.push(drink);
+    out.people.push({ name: name, attending: attending, party: party });
+    if (dish || type) out.dishes.push({ type: type, dish: dish || ('A ' + type.split(', ')[0].toLowerCase() + ' (TBD)'), name: name });
+    if (drink) { out.drinks.push(drink); out.drinkNames.push(name); }
   });
   return json_(out);
 }
