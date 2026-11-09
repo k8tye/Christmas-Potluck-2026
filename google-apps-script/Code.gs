@@ -68,7 +68,7 @@ function saveRsvp_(d) {
 
   const row = [
     now, now, name, clean_(d.contact, 120), attending,
-    party, kids, clean_(d.dishType, 100), clean_(d.dishes, 200), clean_(d.drinks, 200),
+    party, kids, clean_(d.dishType, 1000), clean_(d.dishes, 3000), clean_(d.drinks, 3000),
     clean_(d.diet, 200), clean_(d.dietNotes, 300), clean_(d.song, 120), clean_(d.note, 500)
   ];
 

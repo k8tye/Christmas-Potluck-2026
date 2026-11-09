@@ -474,7 +474,6 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
   const form = $("#rsvp");
   const STORE_KEY = "potluck2026-rsvp";
   const err = $("#formError"), btn = $("#submitBtn");
-  const MAX_DISHES = 3;
 
   /* ---- Apple devices: .ics file; everyone else: Google Calendar ---- */
   const isApple = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
@@ -531,7 +530,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     syncAddBtn();
     if (focus) $("input", row).focus();
   }
-  function syncAddBtn() { addBtn.hidden = dishList.children.length >= MAX_DISHES; }
+  function syncAddBtn() {} // no limit on dishes
   addBtn.addEventListener("click", () => addDishRow("", "", true));
   const drinkList = $("#drinkList"), addDrinkBtn = $("#addDrink"), drinkTpl = $("#drinkRowTpl");
   const PLACEHOLDERS = ["e.g. Sweet tea", "e.g. Red wine", "e.g. Sparkling cider"];
@@ -552,7 +551,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     syncDrinkBtn();
     if (focus) inp.focus();
   }
-  function syncDrinkBtn() { addDrinkBtn.hidden = drinkList.children.length >= MAX_DISHES; }
+  function syncDrinkBtn() {} // no limit on drinks
   addDrinkBtn.addEventListener("click", () => addDrinkRow("", true));
   const noCommas = v => v.trim().replace(/\s*,\s*/g, " ").replace(/\s+/g, " ");
   function getDrinks() {
