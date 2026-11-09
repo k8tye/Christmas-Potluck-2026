@@ -31,49 +31,67 @@ function setup() {
   MailApp.getRemainingDailyQuota(); // triggers the email permission prompt
 }
 
-/** Receives an RSVP from the web page. */
+/** Receives an RSVP sent as a POST (kept for compatibility). */
 function doPost(e) {
-  const lock = LockService.getScriptLock();
-  lock.waitLock(15000);
   try {
-    const d = JSON.parse(e.postData.contents || '{}');
-    if (d.website) return json_({ ok: true }); // spam bot filled the hidden field
+    return json_(saveRsvp_(JSON.parse((e && e.postData && e.postData.contents) || '{}')));
+  } catch (err) {
+    return json_({ ok: false, error: String(err) });
+  }
+}
 
-    const name = clean_(d.name, 100);
-    const attending = ['Yes', 'Maybe', 'No'].indexOf(d.attending) >= 0 ? d.attending : '';
-    if (!name || !attending) return json_({ ok: false, error: 'Name and attendance are required.' });
+/** Saves one RSVP: adds a row, or updates the row with the same name. */
+function saveRsvp_(d) {
+  if (d.website) return { ok: true, saved: true }; // spam bot filled the hidden field
 
-    const coming = attending !== 'No';
-    const party = coming ? Math.max(1, Math.min(20, parseInt(d.party, 10) || 1)) : 0;
-    const kids = coming ? Math.max(0, Math.min(party, parseInt(d.kids, 10) || 0)) : 0;
-    const now = new Date();
+  const name = clean_(d.name, 100);
+  const attending = ['Yes', 'Maybe', 'No'].indexOf(d.attending) >= 0 ? d.attending : '';
+  if (!name || !attending) return { ok: false, error: 'Name and attendance are required.' };
 
-    const row = [
-      now, now, name, clean_(d.contact, 120), attending,
-      party, kids, clean_(d.dishType, 100), clean_(d.dishes, 200), clean_(d.drinks, 200),
-      clean_(d.diet, 200), clean_(d.dietNotes, 300), clean_(d.song, 120), clean_(d.note, 500)
-    ];
+  const coming = attending !== 'No';
+  const party = coming ? Math.max(1, Math.min(20, parseInt(d.party, 10) || 1)) : 0;
+  const kids = coming ? Math.max(0, Math.min(party, parseInt(d.kids, 10) || 0)) : 0;
+  const now = new Date();
 
+  const row = [
+    now, now, name, clean_(d.contact, 120), attending,
+    party, kids, clean_(d.dishType, 100), clean_(d.dishes, 200), clean_(d.drinks, 200),
+    clean_(d.diet, 200), clean_(d.dietNotes, 300), clean_(d.song, 120), clean_(d.note, 500)
+  ];
+
+  const lock = LockService.getScriptLock();
+  let existing;
+  try {
+    lock.waitLock(15000);
     const sheet = getSheet_();
-    const existing = findRowByName_(sheet, name);
+    existing = findRowByName_(sheet, name);
     if (existing) {
       row[0] = sheet.getRange(existing, 1).getValue() || now; // keep the original date
       sheet.getRange(existing, 1, 1, row.length).setValues([row]);
     } else {
       sheet.appendRow(row);
     }
-
-    notify_(row, !!existing);
-    return json_({ ok: true, updated: !!existing });
-  } catch (err) {
-    return json_({ ok: false, error: String(err) });
   } finally {
     lock.releaseLock();
   }
+
+  // The RSVP is saved at this point; a failed email shouldn't make the guest retry.
+  let emailed = true;
+  try { notify_(row, !!existing); } catch (err) { emailed = false; console.error('Email failed: ' + err); }
+
+  return { ok: true, saved: true, updated: !!existing, emailed: emailed };
 }
 
-/** Public "Who's bringing what" list for the web page. Dishes & drinks only. */
-function doGet() {
+/** Saves an RSVP (?rsvp=...) or returns the public "Who's bringing what" list (dishes & drinks only). */
+function doGet(e) {
+  // The RSVP page sends answers as ?rsvp={...}
+  if (e && e.parameter && e.parameter.rsvp) {
+    try {
+      return json_(saveRsvp_(JSON.parse(e.parameter.rsvp)));
+    } catch (err) {
+      return json_({ ok: false, error: String(err) });
+    }
+  }
   const sheet = getSheet_();
   const last = sheet.getLastRow();
   const out = { ok: true, guests: 0, households: 0, dishes: [], drinks: [] };

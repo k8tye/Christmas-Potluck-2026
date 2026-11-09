@@ -494,13 +494,16 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     let preview = false;
     try {
       if (RSVP_ENDPOINT) {
-        const res = await fetch(RSVP_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight
-          body: JSON.stringify(data)
-        });
-        const out = await res.json();
-        if (!out.ok) throw new Error(out.error || "Something went wrong");
+        // Sent as a GET (?rsvp=...) because browsers handle Google's GET redirects reliably
+        let out;
+        try {
+          const res = await fetch(RSVP_ENDPOINT + "?rsvp=" + encodeURIComponent(JSON.stringify(data)));
+          out = await res.json();
+        } catch (e) {
+          throw new Error("Couldn't reach the RSVP server. Please check your connection and try again.");
+        }
+        if (!out.ok) throw new Error("Sorry, that didn't save (" + (out.error || "unknown error") + "). Please try again.");
+        if (!out.saved) throw new Error("The RSVP server needs a quick update from the host. Please try again a little later.");
       } else {
         preview = true;
       }
@@ -508,7 +511,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
       showThanks(data, preview);
       loadPotluck();
     } catch (e) {
-      showError("Hmm, that didn't go through. Please check your connection and try again.");
+      showError(e.message || "Hmm, that didn't go through. Please try again.");
     } finally {
       btn.disabled = false;
       btn.textContent = "Send my RSVP 🎄";
