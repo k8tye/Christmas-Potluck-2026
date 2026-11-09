@@ -106,14 +106,16 @@
   .btn-ghost:active { background: #f3ead4; }
 
   .deadline {
-    margin: 22px auto 0; text-align: center;
+    margin: 22px auto 0; text-align: center; white-space: nowrap;
     background: var(--red); color: #fff;
-    font-family: var(--script); font-size: clamp(1.45rem, 6.5vw, 1.8rem);
-    padding: 8px 18px 10px; line-height: 1.1;
-    clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%);
+    display: flex; align-items: baseline; justify-content: center; gap: .4em;
+    padding: 4px 22px 5px; line-height: 1.2;
+    clip-path: polygon(0 0, 100% 0, 97% 50%, 100% 100%, 0 100%, 3% 50%);
     box-shadow: inset 0 0 0 2px var(--gold);
   }
-  .deadline small { display: block; font-family: var(--sans); font-size: .8rem; font-weight: 700; letter-spacing: .02em; color: var(--gold-soft); margin-top: 2px; }
+  .deadline .k { font-family: var(--script); font-size: clamp(1.1rem, 5vw, 1.4rem); }
+  @media (max-width: 359px) { .deadline { flex-wrap: wrap; white-space: normal; row-gap: 0; padding: 4px 18px 6px; } }
+  .deadline .by { font-family: var(--sans); font-size: clamp(.74rem, 3.4vw, .9rem); font-weight: 700; color: var(--gold-soft); letter-spacing: .01em; }
 
   /* ---------- Section titles (script, like the invite) ---------- */
   h2 {
@@ -191,7 +193,8 @@
     color: var(--muted); font-size: 1.4rem; line-height: 1; cursor: pointer; display: grid; place-items: center;
   }
   .icon-btn:active { background: #f3ead4; }
-  .dish-row:first-child .icon-btn { visibility: hidden; }
+  .drink-row { display: grid; grid-template-columns: minmax(0,1fr) 36px; gap: 8px; align-items: center; }
+  .dish-row:first-child .icon-btn, .drink-row:first-child .icon-btn { visibility: hidden; }
   .add-dish {
     margin-top: 10px; display: inline-flex; align-items: center; gap: 8px;
     min-height: 44px; padding: 8px 16px 8px 10px; border-radius: 999px;
@@ -272,7 +275,7 @@
       <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
       <p class="tagline">Dinner &nbsp;•&nbsp; Karaoke &nbsp;•&nbsp; Special Christmas Guest</p>
       <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
-      <p class="bring">Bring a dish to share and your beverage of choice.<br>Bring the whole family!</p>
+      <p class="bring">Share a favorite dish and your beverage of choice.<br>Families welcome!</p>
 
       <div class="actions">
         <a class="btn-ghost" id="calBtn" href="invite.ics">
@@ -285,7 +288,7 @@
         </a>
       </div>
 
-      <div class="deadline">Kindly RSVP<small>by Tuesday, December 1</small></div>
+      <div class="deadline"><span class="k">Kindly RSVP</span><span class="by">by Tuesday, December 1</span></div>
     </section>
 
     <!-- ================= RSVP FORM ================= -->
@@ -338,8 +341,9 @@
           </div>
 
           <div class="field">
-            <label for="drinks">Drinks you're bringing</label>
-            <input type="text" id="drinks" name="drinks" maxlength="200" placeholder="e.g. Red wine, sweet tea, sparkling cider">
+            <span class="label" id="drinkLabel">Drinks you're bringing</span>
+            <div class="dish-list" id="drinkList" role="group" aria-labelledby="drinkLabel"></div>
+            <button type="button" class="add-dish" id="addDrink"><span class="plus" aria-hidden="true">+</span> Add another drink</button>
             <p class="hint">Check <b>"Who's Bringing What"</b> below to avoid doubles. Not sure what to bring? No worries! Come back and update at any time.</p>
           </div>
 
@@ -412,6 +416,13 @@
   </div>
 </template>
 
+<template id="drinkRowTpl">
+  <div class="drink-row">
+    <input type="text" maxlength="60" placeholder="e.g. Sweet tea" aria-label="Drink">
+    <button type="button" class="icon-btn" aria-label="Remove this drink">×</button>
+  </div>
+</template>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="flake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
     <path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7"/>
@@ -441,7 +452,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     gcal.searchParams.set("text", "Ugly Sweater Christmas Potluck");
     gcal.searchParams.set("dates", "20261205T230000Z/20261206T030000Z");
     gcal.searchParams.set("location", "40008 Maddie Drive, Prairieville, LA 70769");
-    gcal.searchParams.set("details", "DMAE / VIS Professors Ugly Sweater Christmas Potluck. Dinner, karaoke & a special Christmas guest! Bring a dish to share and your beverage of choice. Bring the whole family!");
+    gcal.searchParams.set("details", "DMAE / VIS Professors Ugly Sweater Christmas Potluck. Dinner, karaoke & a special Christmas guest! Share a favorite dish and your beverage of choice. Families welcome!");
     $("#calBtn").href = gcal.toString();
     $("#calBtn").target = "_blank";
     $("#calBtn").rel = "noopener";
@@ -492,6 +503,23 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
   }
   function syncAddBtn() { addBtn.hidden = dishList.children.length >= MAX_DISHES; }
   addBtn.addEventListener("click", () => addDishRow("", "", true));
+  const drinkList = $("#drinkList"), addDrinkBtn = $("#addDrink"), drinkTpl = $("#drinkRowTpl");
+  const PLACEHOLDERS = ["e.g. Sweet tea", "e.g. Red wine", "e.g. Sparkling cider"];
+  function addDrinkRow(name = "", focus = false) {
+    const row = drinkTpl.content.firstElementChild.cloneNode(true);
+    const inp = $("input", row);
+    inp.value = name;
+    inp.placeholder = PLACEHOLDERS[drinkList.children.length] || "";
+    $(".icon-btn", row).addEventListener("click", () => { row.remove(); syncDrinkBtn(); });
+    drinkList.append(row);
+    syncDrinkBtn();
+    if (focus) inp.focus();
+  }
+  function syncDrinkBtn() { addDrinkBtn.hidden = drinkList.children.length >= MAX_DISHES; }
+  addDrinkBtn.addEventListener("click", () => addDrinkRow("", true));
+  const noCommas = v => v.trim().replace(/\s*,\s*/g, " ").replace(/\s+/g, " ");
+  function getDrinks() { return $$(".drink-row input", drinkList).map(i => noCommas(i.value)).filter(Boolean); }
+
   function getDishes() {
     return $$(".dish-row", dishList)
       .map(r => ({ type: $("select", r).value, name: $("input", r).value.trim().replace(/\s*,\s*/g, " ").replace(/\s+/g, " ") }))
@@ -515,7 +543,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
       // stored as matching comma lists: "Side, Dessert" / "Gumbo, Pralines"
       dishType: dishes.map(d => d.type || "Other").join(", "),
       dishes: dishes.map(d => d.name || "TBD").join(", "),
-      drinks: isComing ? form.drinks.value.trim() : "",
+      drinks: isComing ? getDrinks().join(", ") : "",
       diet: !isComing ? "" : form.dietYN.value === "Yes" ? "Yes" : form.dietYN.value === "No" ? "None" : "",
       dietNotes: dietYes ? form.dietNotes.value.trim() : "",
       song: "",
@@ -533,7 +561,9 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     const types = (d.dishType || "").split(", "), names = (d.dishes || "").split(", ");
     names.forEach((n, i) => { if (n || types[i]) addDishRow(types[i] || "", n === "TBD" ? "" : n); });
     if (!dishList.children.length) addDishRow();
-    form.drinks.value = d.drinks || "";
+    drinkList.replaceChildren();
+    (d.drinks || "").split(/\s*,\s*/).filter(Boolean).forEach(n => addDrinkRow(n));
+    if (!drinkList.children.length) addDrinkRow();
     const yn = d.diet === "None" ? "No" : d.diet ? "Yes" : "";
     $$('input[name="dietYN"]').forEach(r => r.checked = r.value === yn);
     form.dietNotes.value = d.dietNotes || "";
@@ -542,7 +572,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
   }
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) {}
-  if (saved) restore(saved); else addDishRow();
+  if (saved) restore(saved); else { addDishRow(); addDrinkRow(); }
 
   /* ---- Submit ---- */
   const err = $("#formError"), btn = $("#submitBtn");
@@ -676,7 +706,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
         g.append(h, ul); frag.append(g);
       };
       GROUPS.forEach(([key, title]) => addGroup(title, items.filter(x => x.type === key).map(x => x.name)));
-      addGroup("🥤 Drinks", d.drinks);
+      addGroup("🥤 Drinks", d.drinks.flatMap(x => String(x).split(/\s*,\s*/)).filter(Boolean));
       if (!frag.childNodes.length) box.innerHTML = '<p class="empty">No dishes yet. Be the first to claim one!</p>';
       else box.replaceChildren(frag);
     } catch (e) {
