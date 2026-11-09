@@ -1,6 +1,6 @@
 # Ugly Sweater Christmas Potluck — RSVP
 
-Saturday, December 5, 2026 · 5:00 PM · 40008 Maddie Drive, Prairieville, LA 70769
+Saturday, December 5, 2026 · 5:00 PM · 40008 Maddie Drive, Prairieville, LA 70769 (Katy's House)
 RSVP by Tuesday, December 1.
 
 **RSVP page:** https://k8tye.github.io/Christmas-Potluck-2026/
