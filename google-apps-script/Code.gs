@@ -7,7 +7,12 @@
  *  - Every RSVP is saved as a row in the "RSVPs" tab.
  *  - If someone RSVPs again with the same name, their row is updated (not duplicated).
  *  - You get an email for every RSVP.
- *  - The RSVP page reads a public dish/drink list (no names, contacts or dietary info).
+ *  - The RSVP page reads the public guest list: names, party sizes, dishes and drinks.
+ *    Dietary needs and notes are never sent to the page.
+ *
+ * Columns are found by their HEADER NAME in row 1, so you can delete, add, rename-back
+ * or reorder columns freely. Missing columns are simply skipped (and the essential
+ * ones are re-added at the end if they are ever deleted).
  */
 
 // Who gets the notification emails. Blank = the Google account that owns this script.
@@ -15,19 +20,23 @@
 const NOTIFY_EMAIL = '';
 
 const SHEET_NAME = 'RSVPs';
+
+// Columns used for a brand-new sheet, in this order.
 const HEADERS = [
-  'First submitted', 'Last updated', 'Name', 'Phone / email', 'Attending',
+  'First submitted', 'Last updated', 'Name', 'Attending',
   'Party size', 'Kids', 'Dish type', 'Dish(es)', 'Drinks',
-  'Dietary needs', 'Dietary notes', 'Karaoke song', 'Note'
+  'Dietary needs', 'Dietary notes', 'Note'
 ];
+// These must exist; if one is deleted it is added back at the end of row 1.
+const REQUIRED = ['Name', 'Attending', 'Party size', 'Dish type', 'Dish(es)', 'Drinks'];
 
 /** Run this once from the editor (select "setup" > Run) to create the tab and grant permissions. */
 function setup() {
   const sheet = getSheet_();
-  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS])
-    .setFontWeight('bold').setBackground('#a5121c').setFontColor('#ffffff');
+  const n = sheet.getLastColumn();
+  sheet.getRange(1, 1, 1, n).setFontWeight('bold').setBackground('#a5121c').setFontColor('#ffffff');
   sheet.setFrozenRows(1);
-  sheet.setColumnWidths(1, HEADERS.length, 150);
+  sheet.setColumnWidths(1, n, 150);
   MailApp.getRemainingDailyQuota(); // triggers the email permission prompt
 }
 
@@ -66,31 +75,38 @@ function saveRsvp_(d) {
   const kids = coming ? Math.max(0, Math.min(party, parseInt(d.kids, 10) || 0)) : 0;
   const now = new Date();
 
-  const row = [
-    now, now, name, clean_(d.contact, 120), attending,
-    party, kids, clean_(d.dishType, 1000), clean_(d.dishes, 3000), clean_(d.drinks, 3000),
-    clean_(d.diet, 200), clean_(d.dietNotes, 300), clean_(d.song, 120), clean_(d.note, 500)
-  ];
+  // Values by column header. Headers not present in the sheet are skipped.
+  const rec = {
+    'First submitted': now, 'Last updated': now, 'Name': name, 'Attending': attending,
+    'Party size': party, 'Kids': kids,
+    'Dish type': clean_(d.dishType, 1000), 'Dish(es)': clean_(d.dishes, 3000), 'Drinks': clean_(d.drinks, 3000),
+    'Dietary needs': clean_(d.diet, 200), 'Dietary notes': clean_(d.dietNotes, 300), 'Note': clean_(d.note, 500),
+    'Phone / email': clean_(d.contact, 120), 'Karaoke song': clean_(d.song, 120)
+  };
 
   const lock = LockService.getScriptLock();
   let existing;
   try {
     lock.waitLock(15000);
     const sheet = getSheet_();
-    existing = findRowByName_(sheet, name);
-    if (existing) {
-      row[0] = sheet.getRange(existing, 1).getValue() || now; // keep the original date
-      sheet.getRange(existing, 1, 1, row.length).setValues([row]);
-    } else {
-      sheet.appendRow(row);
+    const col = columns_(sheet);
+    const width = sheet.getLastColumn();
+    existing = findRowByName_(sheet, col, name);
+    // Start from the existing row so any columns you added yourself are kept as-is.
+    const row = existing ? sheet.getRange(existing, 1, 1, width).getValues()[0] : new Array(width).fill('');
+    if (existing && col['First submitted'] !== undefined && row[col['First submitted']]) {
+      rec['First submitted'] = row[col['First submitted']]; // keep the original date
     }
+    Object.keys(rec).forEach(function (h) { if (col[h] !== undefined) row[col[h]] = rec[h]; });
+    if (existing) sheet.getRange(existing, 1, 1, width).setValues([row]);
+    else sheet.appendRow(row);
   } finally {
     lock.releaseLock();
   }
 
   // The RSVP is saved at this point; a failed email shouldn't make the guest retry.
   let emailed = true;
-  try { notify_(row, !!existing); } catch (err) { emailed = false; console.error('Email failed: ' + err); }
+  try { notify_(rec, !!existing); } catch (err) { emailed = false; console.error('Email failed: ' + err); }
 
   return { ok: true, saved: true, updated: !!existing, emailed: emailed };
 }
@@ -111,12 +127,15 @@ function doGet(e) {
   const out = { ok: true, guests: 0, households: 0, people: [], dishes: [], drinks: [], drinkNames: [] };
   if (last < 2) return json_(out);
 
-  const rows = sheet.getRange(2, 1, last - 1, HEADERS.length).getValues();
+  const col = columns_(sheet);
+  const get = function (r, h) { return col[h] === undefined ? '' : r[col[h]]; };
+  const txt = function (r, h) { return String(get(r, h) || '').replace(/^'/, '').trim(); };
+  const rows = sheet.getRange(2, 1, last - 1, sheet.getLastColumn()).getValues();
   rows.forEach(function (r) {
-    const attending = r[4], party = Number(r[5]) || 0;
-    const type = String(r[7] || ''), dish = String(r[8] || '').replace(/^'/, ''), drink = String(r[9] || '').replace(/^'/, '');
+    const attending = txt(r, 'Attending');
     if (attending !== 'Yes' && attending !== 'Maybe') return;
-    const name = String(r[2] || '').replace(/^'/, '').trim();
+    const name = txt(r, 'Name'), party = Number(get(r, 'Party size')) || 0;
+    const type = txt(r, 'Dish type'), dish = txt(r, 'Dish(es)'), drink = txt(r, 'Drinks');
     if (attending === 'Yes') { out.guests += party; out.households++; }
     out.people.push({ name: name, attending: attending, party: party });
     if (dish || type) out.dishes.push({ type: type, dish: dish || ('A ' + type.split(', ')[0].toLowerCase() + ' (TBD)'), name: name });
@@ -137,11 +156,27 @@ function getSheet_() {
   return sheet;
 }
 
-function findRowByName_(sheet, name) {
+/** Map of header name -> 0-based column index, read from row 1. Re-adds required headers if missing. */
+function columns_(sheet) {
+  let width = Math.max(sheet.getLastColumn(), 1);
+  const head = sheet.getRange(1, 1, 1, width).getValues()[0];
+  const col = {};
+  head.forEach(function (h, i) { const k = String(h || '').trim(); if (k && col[k] === undefined) col[k] = i; });
+  REQUIRED.forEach(function (h) {
+    if (col[h] === undefined) {
+      width += 1;
+      sheet.getRange(1, width).setValue(h);
+      col[h] = width - 1;
+    }
+  });
+  return col;
+}
+
+function findRowByName_(sheet, col, name) {
   const last = sheet.getLastRow();
   if (last < 2) return 0;
   const key = normalize_(name);
-  const names = sheet.getRange(2, 3, last - 1, 1).getValues();
+  const names = sheet.getRange(2, col['Name'] + 1, last - 1, 1).getValues();
   for (let i = 0; i < names.length; i++) {
     if (normalize_(names[i][0]) === key) return i + 2;
   }
@@ -159,26 +194,21 @@ function clean_(v, max) {
   return s;
 }
 
-function notify_(row, updated) {
+function notify_(rec, updated) {
   const to = NOTIFY_EMAIL || Session.getEffectiveUser().getEmail();
   if (!to) return;
-  const v = function (i) { return String(row[i] || '').replace(/^'/, ''); };
-  const coming = v(4) !== 'No';
-  const subject = (updated ? '🔁 Updated RSVP: ' : '🎄 New RSVP: ') + v(2) + ' (' + v(4) +
-    (coming ? ', party of ' + v(5) : '') + ')';
-  const lines = [
-    'Name: ' + v(2),
-    'Attending: ' + v(4)
-  ];
+  const v = function (h) { return String(rec[h] == null ? '' : rec[h]).replace(/^'/, ''); };
+  const coming = v('Attending') !== 'No';
+  const subject = (updated ? '🔁 Updated RSVP: ' : '🎄 New RSVP: ') + v('Name') + ' (' + v('Attending') +
+    (coming ? ', party of ' + v('Party size') : '') + ')';
+  const lines = ['Name: ' + v('Name'), 'Attending: ' + v('Attending')];
   if (coming) {
-    lines.push('Party size: ' + v(5) + (Number(row[6]) ? ' (' + v(6) + ' kids)' : ''));
-    lines.push('Dish: ' + [v(7), v(8)].filter(String).join(': '));
-    lines.push('Drinks: ' + v(9));
-    lines.push('Dietary: ' + [v(10), v(11)].filter(String).join(' / '));
-    if (v(12)) lines.push('Karaoke song: ' + v(12));
+    lines.push('Party size: ' + v('Party size') + (Number(rec['Kids']) ? ' (' + v('Kids') + ' kids)' : ''));
+    lines.push('Dish: ' + [v('Dish type'), v('Dish(es)')].filter(String).join(': '));
+    lines.push('Drinks: ' + v('Drinks'));
+    lines.push('Dietary: ' + [v('Dietary needs'), v('Dietary notes')].filter(String).join(' / '));
   }
-  if (v(3)) lines.push('Contact: ' + v(3));
-  if (v(13)) lines.push('Note: ' + v(13));
+  if (v('Note')) lines.push('Note: ' + v('Note'));
   lines.push('', 'All RSVPs: ' + SpreadsheetApp.getActiveSpreadsheet().getUrl());
   MailApp.sendEmail(to, subject, lines.join('\n'));
 }
