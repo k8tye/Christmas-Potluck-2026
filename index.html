@@ -109,18 +109,17 @@
 
   .deadline {
     margin: 22px auto 0; text-align: center; white-space: nowrap;
-    background: var(--red); color: #fff;
+    background: #0038b8; color: #fff; /* Israeli-flag blue */
     display: flex; align-items: baseline; justify-content: center; gap: .4em;
     padding: 4px 22px 5px; line-height: 1.2;
     clip-path: polygon(0 0, 100% 0, 97% 50%, 100% 100%, 0 100%, 3% 50%);
-    box-shadow: inset 0 0 0 2px var(--gold);
   }
   .actions-form { margin: 16px 0 6px; }
   .success-actions { margin: 6px 0 4px; }
   .deadline-form { margin: 26px auto 12px; }
   .deadline .k { font-family: var(--script); font-size: clamp(1.1rem, 5vw, 1.4rem); }
   @media (max-width: 359px) { .deadline { flex-wrap: wrap; white-space: normal; row-gap: 0; padding: 4px 18px 6px; } }
-  .deadline .by { font-family: var(--sans); font-size: clamp(.74rem, 3.4vw, .9rem); font-weight: 700; color: var(--gold-soft); letter-spacing: .01em; }
+  .deadline .by { font-family: var(--sans); font-size: clamp(.74rem, 3.4vw, .9rem); font-weight: 700; color: #fff; letter-spacing: .01em; }
 
   /* ---------- Section titles (script, like the invite) ---------- */
   h2 {
