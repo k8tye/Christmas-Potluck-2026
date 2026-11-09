@@ -93,9 +93,7 @@
   .addr .house { white-space: nowrap; }
   .addr a { color: inherit; text-decoration-color: var(--gold); text-underline-offset: 3px; }
 
-  .rule { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: var(--red); }
-  .rule::before, .rule::after { content: ""; flex: 1; height: 2px; background: var(--red); opacity: .8; }
-  .rule svg { width: 22px; height: 22px; flex: none; }
+  .rule { height: 2px; margin: 18px 0; background: var(--red); opacity: .8; }
 
   .tagline { font-style: italic; font-weight: 700; color: var(--red); font-size: clamp(.92rem, 4.2vw, 1.1rem); margin: 0; }
   .bring { font-style: italic; font-weight: 700; color: var(--green-deep); font-size: .9rem; margin: 14px 0 0; text-wrap: balance; }
@@ -289,9 +287,9 @@
       <p class="time">5:00 PM</p>
       <p class="addr"><a href="https://www.google.com/maps/search/?api=1&query=40008+Maddie+Drive%2C+Prairieville%2C+LA+70769" target="_blank" rel="noopener">40008 Maddie Drive, Prairieville, LA 70769</a> <span class="house">(Katy's House)</span></p>
 
-      <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
+      <div class="rule" aria-hidden="true"></div>
       <p class="tagline">Dinner &nbsp;•&nbsp; Karaoke &nbsp;•&nbsp; Special Christmas Guest</p>
-      <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
+      <div class="rule" aria-hidden="true"></div>
       <p class="bring"><span class="nb">Come hungry:</span> share a dish and your favorite&nbsp;drink!<span class="family">Bring the whole family!</span></p>
 
 
