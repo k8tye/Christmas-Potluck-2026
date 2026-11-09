@@ -235,8 +235,8 @@
   .received .check svg { width: 14px; height: 14px; }
   .success h2 { font-size: clamp(2.7rem, 13vw, 3.4rem); margin: 16px 0 0; }
   .success .encouraged {
-    font-family: var(--script); color: var(--green-deep); font-size: clamp(1.6rem, 7.5vw, 2rem);
-    margin: 2px 0 0; display: inline-flex; align-items: center; gap: 8px; line-height: 1.2;
+    font-family: var(--sans); font-weight: 700; color: var(--green-deep); font-size: clamp(1.15rem, 5.2vw, 1.4rem);
+    margin: 8px 0 0; display: inline-flex; align-items: center; gap: 8px; line-height: 1.25;
   }
   .success .encouraged svg { width: 22px; height: 22px; color: var(--red); flex: none; }
   .success .msg { color: var(--muted); font-size: .92rem; margin: 14px 0 0; }
@@ -381,7 +381,7 @@
     <section id="successView" class="success" hidden aria-live="polite">
       <div class="received"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span> RSVP received</div>
       <h2 id="successTitle" tabindex="-1">See you there!</h2>
-      <p class="encouraged" id="successLine2"><span>Ugly sweaters encouraged</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#flake"/></svg></p>
+      <p class="encouraged" id="successLine2"><span>Ugly Sweaters Encouraged</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#flake"/></svg></p>
       <p class="msg" id="successMsg"></p>
       <dl class="summary" id="summary"></dl>
       <p id="previewNote" class="preview-note" hidden>Preview mode: the RSVP form isn't connected to the Google Sheet yet, so this wasn't saved.</p>
@@ -653,7 +653,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     const first = d.name.split(/\s+/)[0];
     const yes = d.attending === "Yes", maybe = d.attending === "Maybe";
     $("#successTitle").textContent = yes ? "See you there!" : maybe ? "Hope to see you there!" : "We'll miss you!";
-    $("#successLine2 span").textContent = (yes || maybe) ? "Ugly sweaters encouraged" : "Merry Christmas";
+    $("#successLine2 span").textContent = (yes || maybe) ? "Ugly Sweaters Encouraged" : "Merry Christmas";
     $("#successMsg").textContent = yes
       ? `Thanks, ${first}! Your RSVP went through.`
       : maybe ? `Thanks, ${first}! Come back to this page to update your RSVP once you know.`
