@@ -94,6 +94,7 @@
   .tagline { font-style: italic; font-weight: 700; color: var(--red); font-size: clamp(.92rem, 4.2vw, 1.1rem); margin: 0; }
   .bring { font-style: italic; font-weight: 700; color: var(--green-deep); font-size: .9rem; margin: 14px 0 0; text-wrap: balance; }
   .nb { white-space: nowrap; }
+  .bring .family { display: block; margin-top: 12px; font-size: 1.12rem; color: var(--red); }
 
   .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; font-family: var(--sans); }
   .btn-ghost {
@@ -101,7 +102,7 @@
     min-height: 46px; padding: 10px 12px;
     border: 2px solid var(--green); border-radius: 999px;
     color: var(--green-deep); background: #fffaf0;
-    font: 700 .88rem/1.2 var(--sans); text-decoration: none;
+    font: 700 .88rem/1.2 var(--sans); text-decoration: none; text-align: center;
   }
   .btn-ghost svg { width: 18px; height: 18px; flex: none; }
   .btn-ghost:active { background: #f3ead4; }
@@ -114,6 +115,9 @@
     clip-path: polygon(0 0, 100% 0, 97% 50%, 100% 100%, 0 100%, 3% 50%);
     box-shadow: inset 0 0 0 2px var(--gold);
   }
+  .actions-form { margin: 16px 0 6px; }
+  .success-actions { margin: 6px 0 4px; }
+  .deadline-form { margin: 26px auto 12px; }
   .deadline .k { font-family: var(--script); font-size: clamp(1.1rem, 5vw, 1.4rem); }
   @media (max-width: 359px) { .deadline { flex-wrap: wrap; white-space: normal; row-gap: 0; padding: 4px 18px 6px; } }
   .deadline .by { font-family: var(--sans); font-size: clamp(.74rem, 3.4vw, .9rem); font-weight: 700; color: var(--gold-soft); letter-spacing: .01em; }
@@ -182,20 +186,19 @@
 
   /* dish rows */
   .dish-list { display: grid; gap: 10px; }
-  .dish-row { display: grid; grid-template-columns: 124px minmax(0,1fr) 36px; gap: 8px; align-items: center; }
-  .dish-row select { padding-left: 12px; }
+  .dish-row { display: grid; grid-template-columns: 152px minmax(0,1fr) 30px; gap: 8px; align-items: center; }
+  .dish-row select { padding-left: 11px; padding-right: 24px; background-position: right 9px center !important; }
   .dish-row select {
     padding-right: 30px; appearance: none; -webkit-appearance: none; cursor: pointer;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231f5130' stroke-width='2'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 11px center;
   }
   .icon-btn {
-    width: 36px; height: 44px; border-radius: 50%; border: 0; background: transparent;
+    width: 30px; height: 44px; border-radius: 50%; border: 0; background: transparent;
     color: var(--muted); font-size: 1.4rem; line-height: 1; cursor: pointer; display: grid; place-items: center;
   }
   .icon-btn:active { background: #f3ead4; }
-  .drink-row { display: grid; grid-template-columns: minmax(0,1fr) 36px; gap: 8px; align-items: center; }
-  .dish-row:first-child .icon-btn, .drink-row:first-child .icon-btn { visibility: hidden; }
+  .dish-row:first-child .icon-btn { visibility: hidden; }
   .add-dish {
     margin-top: 10px; display: inline-flex; align-items: center; gap: 8px;
     min-height: 44px; padding: 8px 16px 8px 10px; border-radius: 999px;
@@ -276,10 +279,17 @@
       <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
       <p class="tagline">Dinner &nbsp;•&nbsp; Karaoke &nbsp;•&nbsp; Special Christmas Guest</p>
       <div class="rule" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#flake"/></svg></div>
-      <p class="bring"><span class="nb">Come hungry:</span> share a dish and your favorite&nbsp;drink!<br>Bring the whole family!</p>
+      <p class="bring"><span class="nb">Come hungry:</span> share a dish and your favorite&nbsp;drink!<span class="family">Bring the whole family!</span></p>
 
-      <div class="actions">
-        <a class="btn-ghost" id="calBtn" href="invite.ics">
+
+    </section>
+
+    <!-- ================= RSVP FORM ================= -->
+    <section id="formView">
+      <div class="deadline deadline-form"><span class="k">Kindly RSVP</span><span class="by">by Tuesday, December 1</span></div>
+      <p class="sub">Takes about a minute. You can update your answers later.</p>
+      <div class="actions actions-form">
+        <a class="btn-ghost cal-btn" id="calBtn" href="invite.ics">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
           Add to calendar
         </a>
@@ -288,14 +298,6 @@
           Directions
         </a>
       </div>
-
-      <div class="deadline"><span class="k">Kindly RSVP</span><span class="by">by Tuesday, December 1</span></div>
-    </section>
-
-    <!-- ================= RSVP FORM ================= -->
-    <section id="formView">
-      <h2>Will you be there?</h2>
-      <p class="sub">Takes about a minute. You can update your answers later.</p>
 
       <form id="rsvp" novalidate>
         <div class="field" id="f-name">
@@ -317,7 +319,7 @@
             <span class="label">Who's coming?</span>
             <div class="steppers">
               <div class="stepper-box">
-                <span class="label" id="lblParty">Total in your party<br><span class="opt">(including you)</span></span>
+                <span class="label" id="lblParty">Total in your party</span>
                 <div class="stepper" data-min="1" data-max="20">
                   <button type="button" data-step="-1" aria-label="Fewer people">−</button>
                   <output id="party" aria-labelledby="lblParty">1</output>
@@ -325,7 +327,7 @@
                 </div>
               </div>
               <div class="stepper-box">
-                <span class="label" id="lblKids">Kids<br><span class="opt">(under 12)</span></span>
+                <span class="label" id="lblKids">Kids</span>
                 <div class="stepper" data-min="0" data-max="19">
                   <button type="button" data-step="-1" aria-label="Fewer kids">−</button>
                   <output id="kids" aria-labelledby="lblKids">0</output>
@@ -361,10 +363,6 @@
           </div>
         </div>
 
-        <div class="field">
-          <label for="contact">Phone or email <span class="opt">(optional, in case we need to reach you)</span></label>
-          <input type="text" id="contact" name="contact" autocomplete="email" inputmode="email" maxlength="120" placeholder="(225) 555-0123 or you@email.com">
-        </div>
 
         <div class="field">
           <label for="note">Note for the host <span class="opt">(optional)</span></label>
@@ -387,6 +385,16 @@
       <p class="msg" id="successMsg"></p>
       <dl class="summary" id="summary"></dl>
       <p id="previewNote" class="preview-note" hidden>Preview mode: the RSVP form isn't connected to the Google Sheet yet, so this wasn't saved.</p>
+      <div class="actions success-actions" id="successActions">
+        <a class="btn-ghost cal-btn" href="invite.ics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          Add to calendar
+        </a>
+        <a class="btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=40008+Maddie+Drive%2C+Prairieville%2C+LA+70769" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          Directions
+        </a>
+      </div>
       <button class="linkish" type="button" id="editBtn">Change my RSVP</button>
     </section>
 
@@ -412,13 +420,18 @@
       <option value="Dessert">Dessert</option>
       <option value="Other">Other</option>
     </select>
-    <input type="text" maxlength="60" placeholder="e.g. Crawfish mac & cheese" aria-label="Dish name">
+    <input type="text" maxlength="60" placeholder="e.g. Jambalaya" aria-label="Dish name">
     <button type="button" class="icon-btn" aria-label="Remove this dish">×</button>
   </div>
 </template>
 
 <template id="drinkRowTpl">
-  <div class="drink-row">
+  <div class="dish-row drink-row">
+    <select aria-label="Drink type">
+      <option value="">Type…</option>
+      <option value="Alcoholic">Alcoholic</option>
+      <option value="Non-alcoholic">Non-alcoholic</option>
+    </select>
     <input type="text" maxlength="60" placeholder="e.g. Sweet tea" aria-label="Drink">
     <button type="button" class="icon-btn" aria-label="Remove this drink">×</button>
   </div>
@@ -454,9 +467,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     gcal.searchParams.set("dates", "20261205T230000Z/20261206T030000Z");
     gcal.searchParams.set("location", "40008 Maddie Drive, Prairieville, LA 70769");
     gcal.searchParams.set("details", "DMAE / VIS Professors Ugly Sweater Christmas Potluck. Dinner, karaoke & a special Christmas guest! Come hungry: share a dish and your favorite drink! Bring the whole family!");
-    $("#calBtn").href = gcal.toString();
-    $("#calBtn").target = "_blank";
-    $("#calBtn").rel = "noopener";
+    $$(".cal-btn").forEach(a => { a.href = gcal.toString(); a.target = "_blank"; a.rel = "noopener"; });
   }
 
   /* ---- Show/hide fields for people who are coming ---- */
@@ -506,9 +517,16 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
   addBtn.addEventListener("click", () => addDishRow("", "", true));
   const drinkList = $("#drinkList"), addDrinkBtn = $("#addDrink"), drinkTpl = $("#drinkRowTpl");
   const PLACEHOLDERS = ["e.g. Sweet tea", "e.g. Red wine", "e.g. Sparkling cider"];
-  function addDrinkRow(name = "", focus = false) {
+  // Drinks are stored as "Red wine (alcoholic), Sweet tea (non-alcoholic)"
+  const DRINK_RE = /^(.*?)\s*\((alcoholic|non-alcoholic)\)$/i;
+  function parseDrink(str) {
+    const m = String(str).match(DRINK_RE);
+    return m ? { name: m[1], type: m[2].toLowerCase() === "alcoholic" ? "Alcoholic" : "Non-alcoholic" } : { name: String(str), type: "" };
+  }
+  function addDrinkRow(name = "", focus = false, type = "") {
     const row = drinkTpl.content.firstElementChild.cloneNode(true);
     const inp = $("input", row);
+    $("select", row).value = type;
     inp.value = name;
     inp.placeholder = PLACEHOLDERS[drinkList.children.length] || "";
     $(".icon-btn", row).addEventListener("click", () => { row.remove(); syncDrinkBtn(); });
@@ -519,7 +537,13 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
   function syncDrinkBtn() { addDrinkBtn.hidden = drinkList.children.length >= MAX_DISHES; }
   addDrinkBtn.addEventListener("click", () => addDrinkRow("", true));
   const noCommas = v => v.trim().replace(/\s*,\s*/g, " ").replace(/\s+/g, " ");
-  function getDrinks() { return $$(".drink-row input", drinkList).map(i => noCommas(i.value)).filter(Boolean); }
+  function getDrinks() {
+    return $$(".drink-row", drinkList).map(r => {
+      const name = noCommas($("input", r).value), type = $("select", r).value;
+      if (!name && !type) return "";
+      return (name || (type + " drink")) + (type ? ` (${type.toLowerCase()})` : "");
+    }).filter(Boolean);
+  }
 
   function getDishes() {
     return $$(".dish-row", dishList)
@@ -537,7 +561,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     const dietYes = isComing && form.dietYN.value === "Yes";
     return {
       name: form.name.value.trim(),
-      contact: form.contact.value.trim(),
+      contact: "",
       attending,
       party: isComing ? +$("#party").value : 0,
       kids: isComing ? +$("#kids").value : 0,
@@ -554,7 +578,6 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
   }
   function restore(d) {
     form.name.value = d.name || "";
-    form.contact.value = d.contact || "";
     $$('input[name="attending"]').forEach(r => r.checked = r.value === d.attending);
     $("#party").value = d.party || 1;
     $("#kids").value = d.kids || 0;
@@ -563,7 +586,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
     names.forEach((n, i) => { if (n || types[i]) addDishRow(types[i] || "", n === "TBD" ? "" : n); });
     if (!dishList.children.length) addDishRow();
     drinkList.replaceChildren();
-    (d.drinks || "").split(/\s*,\s*/).filter(Boolean).forEach(n => addDrinkRow(n));
+    (d.drinks || "").split(/\s*,\s*/).filter(Boolean).forEach(x => { const p = parseDrink(x); addDrinkRow(p.name, false, p.type); });
     if (!drinkList.children.length) addDrinkRow();
     const yn = d.diet === "None" ? "No" : d.diet ? "Yes" : "";
     $$('input[name="dietYN"]').forEach(r => r.checked = r.value === yn);
@@ -652,6 +675,7 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
       return [dt, dd];
     }));
     $("#previewNote").hidden = !preview;
+    $("#successActions").hidden = !(yes || maybe);
     $("#details").hidden = true;
     $("#formView").hidden = true;
     $("#successView").hidden = false;
@@ -707,7 +731,10 @@ const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwZK7LV0XSiSYjZHJ
         g.append(h, ul); frag.append(g);
       };
       GROUPS.forEach(([key, title]) => addGroup(title, items.filter(x => x.type === key).map(x => x.name)));
-      addGroup("🥤 Drinks", d.drinks.flatMap(x => String(x).split(/\s*,\s*/)).filter(Boolean));
+      const drinks = d.drinks.flatMap(x => String(x).split(/\s*,\s*/)).filter(Boolean).map(parseDrink);
+      addGroup("🍷 Alcoholic drinks", drinks.filter(x => x.type === "Alcoholic").map(x => x.name));
+      addGroup("🥤 Non-alcoholic drinks", drinks.filter(x => x.type === "Non-alcoholic").map(x => x.name));
+      addGroup("🥤 Drinks", drinks.filter(x => !x.type).map(x => x.name));
       if (!frag.childNodes.length) box.innerHTML = '<p class="empty">No dishes yet. Be the first to claim one!</p>';
       else box.replaceChildren(frag);
     } catch (e) {
